@@ -46,19 +46,13 @@ jobs:
         ports:
           - 27017:27017
         options: >-
-          --health-cmd "mongosh --eval 'db.runCommand({ ping: 1 })'" \
-          --health-interval 10s \
-          --health-timeout 5s \
-          --health-retries 5
+          --health-cmd "mongosh --eval 'db.runCommand({ ping: 1 })'" --health-interval 10s --health-timeout 5s --health-retries 5
       redis:
         image: redis:latest
         ports:
           - 6379:6379
         options: >-
-          --health-cmd "redis-cli ping" \
-          --health-interval 10s \
-          --health-timeout 5s \
-          --health-retries 5
+          --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
     env:
       MONGODB_HOST: mongo:27017
       REDIS_URL: redis://redis:6379/0
@@ -74,3 +68,6 @@ jobs:
         with:
           ruby-version: .ruby-version
           bundler-cache: true
+
+      - name: Run tests
+        run: bin/rake
