@@ -246,12 +246,12 @@ GEM
     ruby-progressbar (1.13.0)
     securerandom (0.4.1)
     semian (0.25.2)
-    sidekiq (7.3.9)
-      base64
-      connection_pool (>= 2.3.0)
-      logger
-      rack (>= 2.2.4)
-      redis-client (>= 0.22.2)
+    sidekiq (8.0.7)
+      connection_pool (>= 2.5.0)
+      json (>= 2.9.0)
+      logger (>= 1.6.2)
+      rack (>= 3.1.0)
+      redis-client (>= 0.23.2)
     sidekiq-clockwork (0.1.1)
       sidekiq
     stringio (3.1.7)
@@ -299,7 +299,7 @@ DEPENDENCIES
   redis (~> 4.8)
   rubocop-rails-omakase
   semian
-  sidekiq (~> 7.2)
+  sidekiq (~> 8.0)
   sidekiq-clockwork
   thruster
   tzinfo-data
