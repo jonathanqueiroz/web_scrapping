@@ -24,7 +24,17 @@ Rails.application.configure do
   end
 
   # Change to :null_store to avoid any caching.
-  config.cache_store = :redis_cache_store, { url: ENV.fetch("REDIS_URL") { "redis://localhost:6379/1" } }
+  config.cache_store = :redis_cache_store, {
+    url: ENV.fetch("REDIS_URL", "redis://localhost:6379/1"),
+    semian: {
+      name: "cache_redis",
+      tickets: 10,
+      timeout: 0.5,
+      error_threshold: 3,
+      error_timeout: 10,
+      success_threshold: 1
+    }
+  }
 
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false

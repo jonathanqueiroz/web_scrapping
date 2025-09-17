@@ -26,6 +26,7 @@ gem "nokogiri", "~> 1.12"
 gem "sidekiq", "~> 7.2"
 gem "clockwork"
 gem "sidekiq-clockwork"
+gem "semian", require: %w[semian semian/net_http semian/redis]
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

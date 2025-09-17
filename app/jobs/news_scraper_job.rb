@@ -10,8 +10,6 @@ class NewsScraperJob
     else
       LogError.create(message: "Provider não suportado: #{provider}")
     end
-  rescue => e
-    LogError.create(message: "Erro no NewsScraperJob: #{e.message}", backtrace: e.backtrace.join("\n"))
   end
 
   private
@@ -19,20 +17,32 @@ class NewsScraperJob
   def scrape_g1
     require "open-uri"
     require "nokogiri"
+    require "semian"
 
     url = "https://g1.globo.com/"
-    doc = Nokogiri::HTML(URI.open(url))
 
-    doc.css(".feed-post").each do |post|
-      title = post.at_css(".feed-post-link")&.text&.strip
-      link = post.at_css(".feed-post-link")&.[]("href")
+    begin
+      Semian[:g1_scraper].acquire do
+        doc = Nokogiri::HTML(URI.open(url))
 
-      next if title.blank? || link.blank?
-      news = News.where(title: title, url: link, source: "g1").first
+        doc.css(".feed-post").each do |post|
+          title = post.at_css(".feed-post-link")&.text&.strip
+          link = post.at_css(".feed-post-link")&.[]("href")
 
-      if news.blank?
-        News.create!(title: title, url: link, source: "g1", scraped_at: Time.current)
+          next if title.blank? || link.blank?
+          next if link.match?(/ao[-]?vivo/i)
+
+          news = News.where(title: title, url: link, source: "g1").first
+
+          if news.blank?
+            News.create!(title: title, url: link, source: "g1", scraped_at: Time.current)
+          end
+        end
       end
+    rescue Semian::OpenCircuitError => e
+      LogError.create(message: "Circuit breaker aberto para G1: #{e.message}")
+    rescue => e
+      LogError.create(message: "Erro no NewsScraperJob: #{e.message}", backtrace: e.backtrace.join("\n"))
     end
   end
 end
