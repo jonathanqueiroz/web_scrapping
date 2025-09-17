@@ -1,0 +1,63 @@
+services:
+  app:
+    build: .
+    container_name: web_scrapping_app
+    command: bundle exec rails server -b 0.0.0.0
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+    environment:
+      - MONGODB_HOST=mongo:27017
+      - MONGODB_URI=mongodb://mongo:27017/web_scrapping_development
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - mongo
+      - redis
+
+  sidekiq:
+    build: .
+    container_name: web_scrapping_sidekiq
+    command: bundle exec sidekiq
+    volumes:
+      - .:/app
+    environment:
+      - MONGODB_HOST=mongo:27017
+      - MONGODB_URI=mongodb://mongo:27017/web_scrapping_development
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - mongo
+      - redis
+
+  clockwork:
+    build: .
+    container_name: web_scrapping_clockwork
+    command: bundle exec clockwork config/clock.rb
+    volumes:
+      - .:/app
+    environment:
+      - MONGODB_URI=mongodb://mongo:27017/web_scrapping_development
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - mongo
+      - redis
+
+  mongo:
+    image: mongo:7.0.5
+    container_name: web_scrapping_mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  redis:
+    image: redis:7.2.4-alpine
+    container_name: web_scrapping_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+volumes:
+  mongo_data:
+  redis_data:
