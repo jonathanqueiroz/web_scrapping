@@ -39,8 +39,12 @@ class NewsScraperJob
           end
         end
       end
-    rescue Semian::OpenCircuitError => e
+    rescue Semian::OpenCircuitError, Semian::TimeoutError => e
       LogError.create(message: "Circuit breaker aberto para G1: #{e.message}")
+
+      cached_data = Rails.cache.read("recent_news")
+
+      Rails.cache.write("recent_news", cached_data, expires_in: 10.minutes) if cached_data.present?
     rescue => e
       LogError.create(message: "Erro no NewsScraperJob: #{e.message}", backtrace: e.backtrace.join("\n"))
     end
