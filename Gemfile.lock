@@ -95,8 +95,13 @@ GEM
     drb (2.2.3)
     erb (5.0.2)
     erubi (1.13.1)
+    fiber-storage (1.0.1)
     globalid (1.2.1)
       activesupport (>= 6.1)
+    graphql (2.5.12)
+      base64
+      fiber-storage
+      logger
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
     io-console (0.8.1)
@@ -293,6 +298,7 @@ DEPENDENCIES
   brakeman
   clockwork
   debug
+  graphql
   mongoid (~> 9.0)
   nokogiri (~> 1.12)
   puma (>= 5.0)
