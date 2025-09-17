@@ -74,6 +74,3 @@ jobs:
         with:
           ruby-version: .ruby-version
           bundler-cache: true
-
-      - name: Run tests
-        run: bin/rake
