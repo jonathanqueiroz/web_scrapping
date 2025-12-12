@@ -23,7 +23,7 @@ gem "mongoid", "~> 9.0"
 gem "nokogiri", "~> 1.12"
 
 # Sidekiq para processamento de jobs em background
-gem "sidekiq", "~> 8.0"
+gem "sidekiq", "~> 8.1"
 gem "clockwork"
 gem "sidekiq-clockwork"
 gem "semian", require: %w[semian semian/net_http semian/redis]
